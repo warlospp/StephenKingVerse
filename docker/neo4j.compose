@@ -1,0 +1,14 @@
+docker volume create neo4jdata
+docker volume create neo4jlogs
+docker volume create neo4jimport
+docker volume create neo4jplugins
+
+docker run --name neo4j `
+-p 7474:7474 -p 7687:7687 `
+-v neo4jdata:/data `
+-v neo4jlogs:/logs `
+-v neo4jimport:/var/lib/neo4j/import `
+-v neo4jplugins:/plugins `
+--env NEO4J_PLUGINS='[\"apoc\",\"n10s\"]' `
+--env NEO4J_AUTH=neo4j/Admin.123 `
+neo4j:4.4.24
