@@ -3,276 +3,151 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-ex:1957 a ex:fecha ;
-    ex:co_ocurre_con ex:Bill,
-        ex:Derry,
-        ex:Elisa,
-        ex:George,
-        ex:Jackson,
-        ex:Paterson,
-        ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:William,
-        ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "1957" .
+ex:Alla a ex:lugar ;
+    ex:co_ocurre_con ex:Mike ;
+    ex:nombre "Alla" .
+
+ex:Ann a foaf:Person ;
+    foaf:name "Ann" .
+
+ex:Anni a foaf:Person ;
+    foaf:knows ex:Ricky ;
+    foaf:name "Anni" .
+
+ex:Ben a foaf:Person ;
+    ex:co_ocurre_con ex:Main,
+        ex:Mike,
+        ex:Parva,
+        ex:Uris,
+        ex:habia ;
+    foaf:knows ex:Buddy,
+        ex:Frank,
+        ex:Pat_Ni,
+        ex:Ricky,
+        ex:St,
+        ex:Vayamos ;
+    foaf:name "Ben" .
+
+ex:Bob a foaf:Person ;
+    ex:co_ocurre_con ex:Mike ;
+    foaf:name "Bob" .
+
+ex:Cape a ex:lugar ;
+    ex:nombre "Cape" .
+
+ex:Dolar_Katook a ex:lugar ;
+    ex:nombre "Dolar Katook" .
+
+ex:Dor a foaf:Person ;
+    foaf:name "Dor" .
+
+ex:Eh a foaf:Person ;
+    foaf:name "Eh" .
+
+ex:Fal a ex:lugar ;
+    ex:nombre "Fal" .
+
+ex:Flint a ex:lugar ;
+    ex:nombre "Flint" .
+
+ex:Idi_Amin_Dada_Jim_Amin_Dada_Jim_Jones a foaf:Person ;
+    foaf:name "Idi Amin Dada Jim Amin Dada Jim Jones" .
+
+ex:Judas_Iscariote_Adolf_Hitler a foaf:Person ;
+    foaf:name "Judas Iscariote Adolf Hitler" .
+
+ex:Mo a foaf:Person ;
+    foaf:name "Mo" .
+
+ex:My a foaf:Person ;
+    foaf:name "My" .
+
+ex:Ne a ex:lugar ;
+    ex:nombre "Ne" .
+
+ex:Rio a ex:lugar ;
+    ex:nombre "Rio" .
+
+ex:Ruby a foaf:Person ;
+    foaf:name "Ruby" .
+
+ex:Sal a ex:lugar ;
+    ex:nombre "Sal" .
+
+ex:Shre a ex:lugar ;
+    ex:nombre "Shre" .
+
+ex:Tomo a foaf:Person ;
+    foaf:name "Tomo" .
+
+ex:Tu a foaf:Person ;
+    foaf:name "Tu" .
+
+ex:ano a ex:fecha ;
+    ex:nombre "ano" .
 
 ex:co_ocurre_con a owl:ObjectProperty ;
     rdfs:label "co_ocurre_con" .
 
-ex:Bill a foaf:Person ;
-    ex:co_ocurre_con ex:Derry,
-        ex:Jackson,
-        ex:Juilliard,
-        ex:Paterson,
-        ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:Witcham_Street,
-        ex:derry,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:fin_abrio,
-        ex:fin_empezo_ceder,
-        ex:los_tres_anos,
-        ex:mesilla_de_noche,
-        ex:muchos_anos,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final,
-        ex:w ;
-    foaf:knows ex:Claro_Mira_George,
-        ex:Decirle_Bill,
-        ex:Elisa,
-        ex:George,
-        ex:Penny,
-        ex:Rio,
-        ex:Vicks_Vaporub,
-        ex:William,
-        ex:Zack,
-        ex:ise ;
-    foaf:name "Bill" .
+ex:mayo a ex:fecha ;
+    ex:nombre "mayo" .
 
-ex:Claro_Mira_George a foaf:Person ;
-    ex:co_ocurre_con ex:w ;
-    foaf:knows ex:Decirle_Bill,
-        ex:George,
-        ex:Penny,
-        ex:ise ;
-    foaf:name "Claro Mira George" .
+ex:noche a ex:fecha ;
+    ex:nombre "noche" .
 
-ex:Decirle_Bill a foaf:Person ;
-    ex:co_ocurre_con ex:w ;
-    foaf:knows ex:George,
-        ex:Penny,
-        ex:ise ;
-    foaf:name "Decirle Bill" .
+ex:nombre a owl:DatatypeProperty ;
+    rdfs:label "nombre" .
 
-ex:Derry a ex:lugar ;
-    ex:co_ocurre_con ex:Elisa,
-        ex:George,
-        ex:Jackson,
-        ex:Paterson,
-        ex:Rio,
-        ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:William,
-        ex:Witcham_Street,
-        ex:Zack,
-        ex:derry,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "Derry" .
+ex:siete_meses a ex:fecha ;
+    ex:nombre "siete meses" .
 
-ex:Juilliard a ex:lugar ;
-    ex:co_ocurre_con ex:Vicks_Vaporub,
-        ex:fin_abrio,
-        ex:fin_empezo_ceder,
-        ex:mesilla_de_noche,
-        ex:muchos_anos ;
-    ex:nombre "Juilliard" .
+ex:Buddy a foaf:Person ;
+    ex:co_ocurre_con ex:Mike ;
+    foaf:name "Buddy" .
 
-ex:los_tres_anos a ex:fecha ;
-    ex:nombre "los tres anos" .
+ex:Frank a foaf:Person ;
+    foaf:name "Frank" .
 
-ex:Elisa a foaf:Person ;
-    ex:co_ocurre_con ex:Jackson,
-        ex:Paterson,
-        ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    foaf:knows ex:George,
-        ex:William ;
-    foaf:name "Elisa" .
+ex:Main a ex:lugar ;
+    ex:co_ocurre_con ex:Mike,
+        ex:Uris ;
+    ex:nombre "Main" .
 
-ex:Rio a foaf:Person ;
-    ex:co_ocurre_con ex:Witcham_Street,
-        ex:derry ;
-    foaf:knows ex:Zack ;
-    foaf:name "Rio" .
+ex:Parva a ex:lugar ;
+    ex:nombre "Parva" .
 
-ex:Vicks_Vaporub a foaf:Person ;
-    ex:co_ocurre_con ex:fin_abrio,
-        ex:fin_empezo_ceder,
-        ex:mesilla_de_noche,
-        ex:muchos_anos ;
-    foaf:name "Vicks Vaporub" .
+ex:Pat_Ni a foaf:Person ;
+    foaf:name "Pat Ni" .
 
-ex:Penny a foaf:Person ;
-    ex:co_ocurre_con ex:w ;
-    foaf:knows ex:ise ;
-    foaf:name "Penny" .
+ex:St a foaf:Person ;
+    foaf:name "St" .
 
-ex:fin_abrio a ex:fecha ;
-    ex:co_ocurre_con ex:fin_empezo_ceder,
-        ex:mesilla_de_noche,
-        ex:muchos_anos ;
-    ex:nombre "fin abrio" .
+ex:Vayamos a foaf:Person ;
+    foaf:name "Vayamos" .
 
-ex:Jackson a ex:lugar,
-        foaf:Person ;
-    ex:co_ocurre_con ex:Paterson,
-        ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:William,
-        ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "Jackson" ;
-    foaf:name "Jackson" .
+ex:ano_de_los_terrenos_ayuda_de_su_hijo_despues_bajo_esas_rocas_restos_podridos_de_los_tocones a ex:fecha ;
+    ex:nombre "ano de los terrenos ayuda de su hijo despues bajo esas rocas restos podridos de los tocones" .
 
-ex:Zack a foaf:Person ;
-    ex:co_ocurre_con ex:derry ;
-    foaf:name "Zack" .
+ex:habia a ex:fecha ;
+    ex:nombre "habia" .
 
-ex:fin_empezo_ceder a ex:fecha ;
-    ex:co_ocurre_con ex:mesilla_de_noche,
-        ex:muchos_anos ;
-    ex:nombre "fin empezo ceder" .
+ex:Ricky a foaf:Person ;
+    foaf:name "Ricky" .
 
-ex:ise a foaf:Person ;
-    ex:co_ocurre_con ex:w ;
-    foaf:name "ise" .
+ex:Uris a ex:lugar ;
+    ex:nombre "Uris" .
 
-ex:George a foaf:Person ;
-    ex:co_ocurre_con ex:Jackson,
-        ex:Juilliard,
-        ex:Paterson,
-        ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:Witcham_Street,
-        ex:derry,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:fin_abrio,
-        ex:fin_empezo_ceder,
-        ex:los_tres_anos,
-        ex:mesilla_de_noche,
-        ex:muchos_anos,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final,
-        ex:w ;
-    foaf:knows ex:Penny,
-        ex:Rio,
-        ex:Vicks_Vaporub,
-        ex:William,
-        ex:Zack,
-        ex:ise ;
-    foaf:name "George" .
-
-ex:Paterson a ex:lugar ;
-    ex:co_ocurre_con ex:Tenia_seis_anos,
-        ex:Un_dia_antes,
-        ex:William,
-        ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "Paterson" .
-
-ex:derry a ex:lugar ;
-    ex:nombre "derry" .
-
-ex:mesilla_de_noche a ex:fecha ;
-    ex:co_ocurre_con ex:muchos_anos ;
-    ex:nombre "mesilla de noche" .
-
-ex:w a ex:lugar ;
-    ex:nombre "w" .
-
-ex:Tenia_seis_anos a ex:fecha ;
-    ex:co_ocurre_con ex:Un_dia_antes,
-        ex:William,
-        ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "Tenia seis anos" .
-
-ex:lugar a owl:Class ;
-    rdfs:label "Loc" .
-
-ex:muchos_anos a ex:fecha ;
-    ex:nombre "muchos anos" .
-
-ex:Un_dia_antes a ex:fecha ;
-    ex:co_ocurre_con ex:William,
-        ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "Un dia antes" .
-
-ex:William a foaf:Person ;
-    ex:co_ocurre_con ex:Witcham_Street,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    foaf:name "William" .
-
-ex:Witcham_Street a ex:lugar ;
-    ex:co_ocurre_con ex:Zack,
-        ex:derry,
-        ex:diez_anos,
-        ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "Witcham Street" .
-
-ex:diez_anos a ex:fecha ;
-    ex:co_ocurre_con ex:el_dia_anterior,
-        ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "diez anos" .
-
-ex:el_dia_anterior a ex:fecha ;
-    ex:co_ocurre_con ex:ocho_meses,
-        ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "el dia anterior" .
+ex:Mike a ex:lugar ;
+    ex:co_ocurre_con ex:Uris,
+        ex:ano_de_los_terrenos_ayuda_de_su_hijo_despues_bajo_esas_rocas_restos_podridos_de_los_tocones ;
+    ex:nombre "Mike" .
 
 ex:fecha a owl:Class ;
     rdfs:label "Date" .
 
+ex:lugar a owl:Class ;
+    rdfs:label "Loc" .
+
 foaf:Person a owl:Class ;
     rdfs:label "Person" .
-
-ex:ocho_meses a ex:fecha ;
-    ex:co_ocurre_con ex:veintiocho_anos_antes_del_desenlace_final ;
-    ex:nombre "ocho meses" .
-
-ex:veintiocho_anos_antes_del_desenlace_final a ex:fecha ;
-    ex:nombre "veintiocho anos antes del desenlace final" .
 

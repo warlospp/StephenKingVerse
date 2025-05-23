@@ -5,53 +5,49 @@ from urllib.parse import unquote
 
 def normalize_entity(texto):
     diccionario = {
-    'Ronald Mcdonal': 'Pennywise',
-    'Payaso': 'Pennywise',
-    'payaso': 'Pennywise',
-    'Eso': 'Pennywise',
-    'Bozo': 'Pennywise',
-    'Clarabell': 'Pennywise',
-    'IT': 'Pennywise',
-    'It': 'Pennywise',
-    'it': 'Pennywise',
-    'el Tartaja': '',
-    'El Tartaja': '',
-    'William Carlos Williams': '',  
-    'Georgie': 'George',
-    'Denbrough':'',
-    'ben': 'Ben',
-    'Bev': 'Beverly', 
-    'Eds': 'Eddie',
-    "invierno": "enero",
-    "otoño": "octubre",
-    "primavera": "abril",
-    "verano": "Julio",
-    "Invierno": "Enero",
-    "Otoño": "Octubre",
-    "Primavera": "Abril",
-    "Verano": "Julio",
-    "Turtle": "Tortuga",
-    "turtle": "Tortuga",
-    "tortuga": "Tortuga",
-    "John Wayne": "",
-    "Chet Huthley": "",
-    "Bruce Springsteen": "",
-    "Judas Priest": "",
-    "Kiss": "",
-    "Def Leppard": "",
+        "Ronald Mcdonal": "Pennywise",
+        "Payaso": "Pennywise",
+        "Eso": "Pennywise",
+        "Bozo": "Pennywise",
+        "Clarabell": "Pennywise",
+        "IT": "Pennywise",
+        "El Tartaja": "Denbrough",
+        "Billestaba": "Bill",
+        "William Carlos Williams": "",  
+        "Georgie": "George",
+        "GGeorgie": "George",
+        "ben": "Ben",
+        "Bev": "Beverly", 
+        "Eds": "Eddie",
+        "Invierno": "Enero",
+        "Otoño": "Octubre",
+        "Primavera": "Abril",
+        "Verano": "Julio",
+        "Turtle": "Tortuga",
+        "John Wayne": "",
+        "Chet Huthley": "",
+        "Bruce Springsteen": "",
+        "Judas Priest": "",
+        "Kiss": "",
+        "Def Leppard": "",
+        "derry": "Derry",
+        "Dwight Eisenhower": "", 
+        "Richard Nixon": "",
+        "Ronald Reagan": "",
+        "George Bush": "",
     }
-    # Escapar claves para usarlas en regex
     patrones = map(re.escape, diccionario.keys())
-    # Crear patrón que busca cualquiera de las palabras completas
     patron_regex = r'\b(' + '|'.join(patrones) + r')\b'
 
-    # Función para reemplazo según diccionario
     def reemplazo(match):
         palabra = match.group(0)
-        return diccionario.get(palabra, palabra)
+        # Buscar en diccionario ignorando mayúsculas
+        for clave, valor in diccionario.items():
+            if palabra.lower() == clave.lower():
+                return valor
+        return palabra
 
-    # Reemplazar todas las coincidencias
-    texto_modificado = re.sub(patron_regex, reemplazo, texto)
+    texto_modificado = re.sub(patron_regex, reemplazo, texto, flags=re.IGNORECASE)
     return texto_modificado
 
 
@@ -114,7 +110,7 @@ def limpiar_uri(texto):
 
     return texto
 
-def limpiar_texto(name: str) -> str:
+def limpiar_texto(texto: str) -> str:
     """
     Limpia y codifica un nombre de entidad para que sea URI-safe.
     - Normaliza caracteres Unicode a ASCII.
@@ -128,17 +124,8 @@ def limpiar_texto(name: str) -> str:
     Returns:
     str: Nombre limpio y codificado para URI.
     """
-
-    # Elimina acentos y caracteres especiales del alfabeto (ej. ñ → n, á → a)
-    name = name.replace('\n', ' ').replace('\r', ' ')    
     # Reemplaza cualquier carácter que no sea una letra, número o guion bajo por un guion bajo
-    name = re.sub(r'[^\w]', ' ', name, flags=re.UNICODE)    
-    # Reemplaza múltiples espacios en blanco consecutivos por un solo guion bajo
-    name = re.sub(r'\s+', ' ', name)    
-    # Reemplaza ciertos caracteres especiales comunes (_ - \ " ' `) por guiones bajos
-    name = name.replace(' ', ' ')    
-    # Codifica la cadena en formato URL, manteniendo los guiones bajos sin modificar
-    #name = urllib.parse.quote(name, safe=' ')    
-    # Elimina guiones bajos al inicio y al final de la cadena
-    name = name.strip(" ")
-    return name
+    texto = re.sub(r'[^\w]', ' ', texto, flags=re.UNICODE)    
+    #texto = unquote(texto)
+    texto = texto.strip(" ")
+    return texto

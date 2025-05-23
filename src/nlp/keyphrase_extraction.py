@@ -1,8 +1,8 @@
 import yake
 
-def extraer_keyphrases_keybert_potente_con_scores(texto, max_phrases = 40 , max_words = 10):
+def extraer_keyphrases_keybert_potente_con_scores(texto, max_phrases = 250 , max_words = 10, min_words = 2, score = 0.55):
     # Configuración de YAKE para español, frases de hasta 3 palabras
-    kw_extractor = yake.KeywordExtractor(lan="es", n=max_words, top=max_phrases)
+    kw_extractor = yake.KeywordExtractor(lan="es", n=max_words, top=max_phrases,)
     
     # Extraer frases clave con sus puntuaciones
     keywords = kw_extractor.extract_keywords(texto)
@@ -28,14 +28,11 @@ def extraer_keyphrases_keybert_potente_con_scores(texto, max_phrases = 40 , max_
     # Filtrar frases válidas con condiciones adicionales
     frases_validas = []
     for (frase, _), norm_score in zip(keywords, scores_norm):
-        if norm_score >= 0.7:
+        if norm_score >= score:
             palabras = frase.split()            
             # Validar: omitir si es una palabra con primera letra minúscula
-            if len(palabras) == 1:
-                #primera_letra = palabras[0][0] if palabras[0] else ''
-                #if primera_letra.islower():
-                continue  # Omitir esta frase
-                    
+            if len(palabras) <=min_words:
+                continue  # Omitir palabras sueltas que empiezan con minúscula
             frases_validas.append(frase)
 
 

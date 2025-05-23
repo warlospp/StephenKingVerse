@@ -28,10 +28,28 @@ def extract_relationships(text, entities, umbral=44):
     return list(relationships)
 
 
+def extract_relationships(text, entities, umbral=44):
+    """
+    Extrae relaciones de co-ocurrencia entre entidades en el texto.
+    Usa similitud difusa para detectar presencia en párrafos.
+    """
+    relationships = set()
+    paragraphs = [p.strip() for p in text.split('\n\n') if p.strip()]
+    for para in paragraphs:
+        para_norm = para.lower()
+        para_entities = []
+        for ent_text, ent_type in entities:
+            ent_text_for_search = limpiar_uri(ent_text).replace('_', ' ').lower()
+            score = fuzz.partial_ratio(ent_text_for_search, para_norm)
+            if score >= umbral:
+                para_entities.append(ent_text)
+        for i in range(len(para_entities)):
+            for j in range(i+1, len(para_entities)):
+                src, tgt = sorted([para_entities[i], para_entities[j]])
+                relationships.add((src, "co_ocurre_con", tgt))
+    return list(relationships)
+
 def generate_ontology(entities, relationships):
-    """
-    Genera un grafo RDF con clases, instancias y relaciones, usando categorías amplias y verbos adecuados.
-    """
     EX = Namespace("http://stephenkingverse.org/")
     g = Graph()
     g.bind("ex", EX)
@@ -42,6 +60,7 @@ def generate_ontology(entities, relationships):
     verbs = ["co_ocurre_con", "trabajar_en", "ocurrir_en", "conocer"]
     relation_map = {verb: EX[verb] for verb in verbs}
 
+    # Categorías con nombres limpios y namespaces explícitos
     categorias = {
         "person": FOAF.Person,
         "personaje": FOAF.Person,
@@ -60,29 +79,34 @@ def generate_ontology(entities, relationships):
         "misceláneo": EX.miscelaneo
     }
 
-    # Normalizar tipos y crear clases RDF
+    # Normalizar tipos únicos y crear clases RDF con etiquetas limpias
     tipos_unicos = set(label.lower() for _, label in entities)
     for tipo in tipos_unicos:
-        clase_uri = categorias.get(tipo, EX[limpiar_uri(tipo)])  # limpiar_uri aquí
+        clase_uri = categorias.get(tipo, EX[limpiar_uri(tipo)])
         g.add((clase_uri, RDF.type, OWL.Class))
         g.add((clase_uri, RDFS.label, Literal(tipo.capitalize())))
+
+    # Definir propiedad 'nombre' limpia en el namespace EX
+    prop_nombre = EX["nombre"]
+    g.add((prop_nombre, RDF.type, OWL.DatatypeProperty))
+    g.add((prop_nombre, RDFS.label, Literal("nombre")))
 
     # Definir propiedad co_ocurre_con
     g.add((EX.co_ocurre_con, RDF.type, OWL.ObjectProperty))
     g.add((EX.co_ocurre_con, RDFS.label, Literal("co_ocurre_con")))
 
-    # Crear instancias y asignar tipo
+    # Crear instancias y asignar tipo con propiedades normalizadas
     for nombre, tipo in entities:
-        nombre_uri = limpiar_uri(nombre)  # limpiar_uri aquí
+        nombre_uri = limpiar_uri(nombre)
         tipo_norm = tipo.lower()
-        clase = categorias.get(tipo_norm, EX[limpiar_uri(tipo_norm)])  # limpiar_uri aquí
+        clase = categorias.get(tipo_norm, EX[limpiar_uri(tipo_norm)])
         entidad_uri = EX[nombre_uri]
         if clase == FOAF.Person:
             g.add((entidad_uri, RDF.type, FOAF.Person))
             g.add((entidad_uri, FOAF.name, Literal(nombre)))
         else:
             g.add((entidad_uri, RDF.type, clase))
-            g.add((entidad_uri, EX.nombre, Literal(nombre)))
+            g.add((entidad_uri, prop_nombre, Literal(nombre)))
 
     # Verbos específicos según tipos
     verbos_por_tipo = {
@@ -115,8 +139,8 @@ def generate_ontology(entities, relationships):
         if src_tipo is None or tgt_tipo is None:
             continue
 
-        src_uri = EX[limpiar_uri(src)]  # limpiar_uri aquí
-        tgt_uri = EX[limpiar_uri(tgt)]  # limpiar_uri aquí
+        src_uri = EX[limpiar_uri(src)]
+        tgt_uri = EX[limpiar_uri(tgt)]
 
         predicado = verbo_adecuado(src_tipo, tgt_tipo, verbo)
 

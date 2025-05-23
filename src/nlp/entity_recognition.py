@@ -11,7 +11,7 @@ from rapidfuzz import fuzz
 
 
 # Inicializar pipeline de NER con modelo preentrenado
-nlp_hf = pipeline("ner", model="Davlan/bert-base-multilingual-cased-ner-hrl", aggregation_strategy="simple")
+nlp_hf = pipeline("ner", model="Davlan/bert-base-multilingual-cased-ner-hrl", aggregation_strategy="first", device=-1)  # Cambia a -1 si no tienes GPU
 # Cargar modelo transformer avanzado  
 nlp_en_core_web_trf = spacy.load("en_core_web_trf")  
 nlp_es_core_news_sm= spacy.load("es_core_news_sm") #
@@ -28,7 +28,7 @@ ETIQUETA_MAPA = {
 }
 
 
-def agrupar_entidades_similares(entities, umbral=95):
+def agrupar_entidades_similares(entities, umbral=25):
     """
     Agrupa entidades similares basándose en la similitud difusa de sus nombres.
 
@@ -66,11 +66,11 @@ def agrupar_entidades_similares(entities, umbral=95):
     # Filtrar: excluir LOC y PERSON con conteo 1
     entidades_filtradas = []
     for entidad, etiqueta, conteo in entidades_agrupadas:
-        if etiqueta in ("LOC", "PERSON") and conteo == 1:
+        if conteo <= 1:
             continue  # Excluir
         entidades_filtradas.append((entidad, etiqueta))
 
-    return entidades_agrupadas
+    return entidades_filtradas
 
 
 # Cargar tokenizer y modelo fine-tuned BETO para NER
@@ -83,7 +83,7 @@ ner_pipeline = pipeline(
     "ner",
     model=model,
     tokenizer=tokenizer,
-    aggregation_strategy="simple",
+    aggregation_strategy="first",
     device=-1  # Cambia a -1 si no tienes GPU
 )
 
@@ -173,27 +173,49 @@ def cluster_entidades_por_categoria_y_frecuencia(entities, n_clusters=3):
     
     return resultado
 
-#def entidad_existe_por_texto(entidad, entidades):
-#    """Verifica si la entidad con texto ya existe (sin importar categoría)."""
-#    entidad_clean = limpiar_texto(entidad)
-#    return any(limpiar_texto(ent) == entidad_clean for ent, _ in entidades)
 
-#def agregar_entidades_validando_texto(entidades_actuales, nuevas_entidades):
-#    """
-#    Agrega nuevas entidades a entidades_actuales validando solo el texto para evitar duplicados.
-#    
-#    Args:
-#        entidades_actuales (list): Lista existente de (entidad, categoria).
-#        nuevas_entidades (list): Lista nueva de (entidad, categoria).
-#        
-#    Returns:
-#        list: Lista actualizada con entidades nuevas no duplicadas (según texto).
-#    """
-#    for ent, cat in nuevas_entidades:
-#        if not entidad_existe_por_texto(ent, entidades_actuales):
-#            # Si NO existe el texto, la agregamos
-#            entidades_actuales.append((ent, cat))
-#    return entidades_actuales
+
+def procesar_entidades_con_excepcion(entidades, num_entidades=2, umbral_score=0.9, excepcion="Pennywise"):
+    """
+    Procesa el arreglo de entidades en tres pasos:
+    1) Elimina entidades cortadas (con '##') y sus num_entidades antes y después.
+    2) Elimina entidades con score menor al umbral, excepto la excepción.
+    3) Retorna el arreglo filtrado.
+
+    Args:
+        entidades (list): Lista de dicts con keys 'word', 'score', etc.
+        num_entidades (int): Cantidad de entidades antes y después a eliminar.
+        umbral_score (float): Score mínimo para conservar una entidad.
+        excepcion (str): Palabra que no debe eliminarse.
+
+    Returns:
+        list: Arreglo filtrado de entidades.
+    """
+    total = len(entidades)
+    indices_a_eliminar = set()
+
+    # Paso 1: Eliminar entidades cortadas y sus alrededores
+    for i, ent in enumerate(entidades):
+        if '##' in ent['word']:
+            inicio = max(0, i - num_entidades)
+            fin = min(total - 1, i + num_entidades)
+            for idx in range(inicio, fin + 1):
+                indices_a_eliminar.add(idx)
+
+    # Construir arreglo temporal sin las entidades eliminadas en paso 1
+    entidades_paso1 = [ent for idx, ent in enumerate(entidades) if idx not in indices_a_eliminar]
+
+    # Paso 2: Eliminar entidades con score menor al umbral, excepto la excepción
+    entidades_filtradas = []
+    for ent in entidades_paso1:
+        if ent['word'] == excepcion:
+            entidades_filtradas.append(ent)
+        elif ent.get('score', 0) >= umbral_score:
+            entidades_filtradas.append(ent)
+        # Si no cumple, se elimina
+
+    return entidades_filtradas
+
 
 
 def extract_entities(text):
@@ -201,22 +223,36 @@ def extract_entities(text):
     Extrae entidades con Hugging Face NER pipeline.
     Retorna lista de tuplas (texto_entidad, etiqueta).
     """
+    #print(text)
     entities = []
     mapa_etiquetas = {"PER": "PERSON", "LOC": "LOC", "ORG": "ORG", "GPE": "LOC"}
+    
     resultados = ner_pipeline(text.strip())
+    resultados = procesar_entidades_con_excepcion(resultados)
     for ent in resultados:
         etiqueta = mapa_etiquetas.get(ent['entity_group'], ent['entity_group'])
         if etiqueta in ["PERSON","GPE", "LOC"]:
-            entities.append((limpiar_texto(ent['word']), etiqueta))
+            #print(ent['word'])
+            texto_limpio = limpiar_texto(ent['word'])
+            if len(texto_limpio) >= 2:  # Solo agregar si tiene 2 o más caracteres
+                entities.append((texto_limpio, etiqueta))
     #print("ENTIDADES BETO")
+    #print(text.strip())
     #print(entities)
+    #print("-----")
 
     entities_new = []
-    ner_results = nlp_hf(text.strip())    
+    #print(text)
+    ner_results = nlp_hf(text.strip())  
+    ner_results = procesar_entidades_con_excepcion(ner_results)  
     for ent in ner_results:
         etiqueta = mapa_etiquetas.get(ent['entity_group'], ent['entity_group'])
         if etiqueta in ["PERSON","GPE", "LOC"]:
-            entities.append((limpiar_texto(ent['word']), etiqueta))
+            #print(ent['word'])
+            #texto_limpio = ent['word']
+            texto_limpio = limpiar_texto(ent['word'])
+            if len(texto_limpio) >= 2:  # Solo agregar si tiene 2 o más caracteres
+                entities.append((texto_limpio, etiqueta))
     #print("ENTIDADES HUGGING FACE")
     #print(ner_results)
 
